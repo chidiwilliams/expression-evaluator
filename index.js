@@ -93,19 +93,77 @@ function shouldUnwindOperatorStack(operators, nextToken) {
 
 const operatorPrecedence = { '*': 2, '/': 2, '+': 1, '-': 1 };
 
-function hasGreaterPrecedence(op1, op2) {
-  return operatorPrecedence[op1] > operatorPrecedence[op2];
+function hasGreaterPrecedence(a, b) {
+  return operatorPrecedence[a] > operatorPrecedence[b];
 }
 
-function hasEqualPrecedence(op1, op2) {
-  return operatorPrecedence[op1] === operatorPrecedence[op2];
+function hasEqualPrecedence(a, b) {
+  return operatorPrecedence[a] === operatorPrecedence[b];
 }
 
 function isLeftAssociative(operator) {
-  return ['+', '-', '/', '*'].includes(operator);
+  return isArithmeticOperator(operator);
 }
 
-function evaluate(rpn) {}
+function isArithmeticOperator(char) {
+  return /[+\-/*]/.test(char);
+}
+
+function evaluate(rpn) {
+  const stack = [];
+
+  rpn.forEach((token) => {
+    if (isOperator(token)) {
+      operate(token, stack);
+    } else if (typeof token === 'number') {
+      stack.push(token);
+    } else {
+      throw new Error(`Invalid operator: ${operator}`);
+    }
+  });
+
+  return stack.pop();
+}
+
+function operate(operator, stack) {
+  const operands = [];
+
+  for (let i = 0; i < getNumOperands(operator); i++) {
+    operands.push(stack.pop());
+  }
+
+  let result;
+  if (isArithmeticOperator(operator)) {
+    result = operateArithmetic(operands[1], operands[0], operator);
+  } else {
+    throw new Error(`Invalid operator: ${operator}`);
+  }
+
+  stack.push(result);
+  return stack;
+}
+
+function operateArithmetic(a, b, operator) {
+  switch (operator) {
+    case '+':
+      return a + b;
+    case '-':
+      return a - b;
+    case '*':
+      return a * b;
+    case '-':
+      return a - b;
+    default:
+      throw new Error(`Invalid operator: ${operator}`);
+  }
+}
+
+function getNumOperands(operator) {
+  if (isArithmeticOperator(operator)) {
+    return 2;
+  }
+  throw new Error(`Invalid operator: ${operator}`);
+}
 
 function evaluator(input) {
   const tokens = tokenize(input);
