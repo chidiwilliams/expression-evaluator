@@ -61,6 +61,13 @@ function parse(tokens) {
         out.push(operators.pop());
       }
       operators.push(token);
+    } else if (token === '(') {
+      operators.push(token);
+    } else if (token === ')') {
+      while (operators[operators.length - 1] !== '(') {
+        out.push(operators.pop());
+      }
+      operators.pop();
     }
   });
 

@@ -15,9 +15,9 @@ const testCases = [
     message: 'with decimals',
   },
   {
-    input: '24 + 5 * 6 - 3',
-    tokens: [24, '+', 5, '*', 6, '-', 3],
-    rpn: [24, 5, 6, '*', '+', 3, '-'],
+    input: '24 + 5 * (6 - 3)',
+    tokens: [24, '+', 5, '*', '(', 6, '-', 3, ')'],
+    rpn: [24, 5, 6, 3, '-', '*', '+'],
     message: 'with operators with different precedences',
   },
 ];
