@@ -9,3 +9,11 @@ Supports:
 - Comparison operators: `<`, `>`, `==`
 - Variables
 - Custom functions
+
+TODO:
+
+- Comments
+
+- Variables
+
+- Custom functions
