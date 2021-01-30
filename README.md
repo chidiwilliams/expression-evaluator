@@ -14,6 +14,6 @@ TODO:
 
 - Comments
 
-- Variables
+- Conditionals, IF, <, >
 
-- Custom functions
+- Environment and multi-line evaluation

@@ -7,7 +7,7 @@ function tokenize(input) {
 
     const DIGITS = /[0-9]/;
     if (DIGITS.test(char)) {
-      let str = '';
+      let digits = '';
       let numberScanner = scanner;
 
       const DIGITS_OR_DOT = /[0-9\.]/;
@@ -15,12 +15,12 @@ function tokenize(input) {
         numberScanner < input.length &&
         DIGITS_OR_DOT.test(input[numberScanner])
       ) {
-        str += input[numberScanner];
+        digits += input[numberScanner];
         numberScanner++;
       }
 
-      const val = parseFloat(str);
-      tokens.push(val);
+      const number = parseFloat(digits);
+      tokens.push(number);
       scanner = numberScanner;
       continue;
     }
@@ -34,6 +34,21 @@ function tokenize(input) {
 
     if (char === ' ') {
       scanner++;
+      continue;
+    }
+
+    const NAMES = /[A-Z]/;
+    if (NAMES.test(char)) {
+      let name = '';
+      let nameScanner = scanner;
+
+      while (nameScanner < input.length && NAMES.test(input[nameScanner])) {
+        name += input[nameScanner];
+        nameScanner++;
+      }
+
+      tokens.push(name);
+      scanner = nameScanner;
       continue;
     }
 
@@ -103,6 +118,19 @@ function parse(tokens) {
       continue;
     }
 
+    const NAMES = /[A-Z]/;
+    if (NAMES.test(token)) {
+      operators.push(token);
+      continue;
+    }
+
+    if (token === ',') {
+      while (operators[operators.length - 1] !== '(') {
+        out.push(operators.pop());
+      }
+      continue;
+    }
+
     throw new Error(`Unparsed token ${token} at position ${scanner}`);
   }
 
@@ -122,21 +150,6 @@ function evaluate(rpn) {
     throw new Error(`Invalid operator: ${operator}`);
   }
 
-  function operateArithmetic(a, b, operator) {
-    switch (operator) {
-      case '+':
-        return a + b;
-      case '-':
-        return a - b;
-      case '*':
-        return a * b;
-      case '-':
-        return a - b;
-      default:
-        throw new Error(`Invalid operator: ${operator}`);
-    }
-  }
-
   function operate(operator, stack) {
     const operands = [];
 
@@ -147,13 +160,36 @@ function evaluate(rpn) {
     let result;
     const ARITHMETIC_OPERATORS = /[+\-/*]/;
     if (ARITHMETIC_OPERATORS.test(operator)) {
-      result = operateArithmetic(operands[1], operands[0], operator);
+      result = operateArithmetic(operands[0], operands[1], operator);
     } else {
       throw new Error(`Invalid operator: ${operator}`);
     }
 
-    stack.push(result);
-    return stack;
+    return result;
+  }
+
+  function operateArithmetic(a, b, operator) {
+    switch (operator) {
+      case '+':
+        return b + a;
+      case '-':
+        return b - a;
+      case '*':
+        return b * a;
+      case '/':
+        return b / a;
+      default:
+        throw new Error(`Invalid operator: ${operator}`);
+    }
+  }
+
+  function apply(func, stack) {
+    if (func === 'MAX') {
+      const a = stack.pop();
+      const b = stack.pop();
+      return Math.max(b, a);
+    }
+    throw new Error(`Invalid operator: ${func}`);
   }
 
   const stack = [];
@@ -163,7 +199,7 @@ function evaluate(rpn) {
 
     const OPERATORS = /[+\-/*<>=]/;
     if (OPERATORS.test(token)) {
-      operate(token, stack);
+      stack.push(operate(token, stack));
       continue;
     }
 
@@ -172,7 +208,13 @@ function evaluate(rpn) {
       continue;
     }
 
-    throw new Error(`Invalid operator: ${operator}`);
+    const NAMES = /[A-Z]/;
+    if (NAMES.test(token)) {
+      stack.push(apply(token, stack));
+      continue;
+    }
+
+    throw new Error(`Invalid operator: ${token}`);
   }
 
   return stack.pop();

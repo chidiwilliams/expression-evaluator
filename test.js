@@ -23,6 +23,13 @@ const testCases = [
     output: 39,
     message: 'with operators with different precedences',
   },
+  {
+    input: 'MAX(50, 10)',
+    tokens: ['MAX', '(', 50, ',', 10, ')'],
+    rpn: [50, 10, 'MAX'],
+    output: 50,
+    message: 'with MAX function',
+  },
 ];
 
 testCases.forEach((test) => {
