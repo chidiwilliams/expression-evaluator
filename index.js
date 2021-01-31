@@ -25,7 +25,7 @@ function tokenize(input) {
       continue;
     }
 
-    const SYMBOLS = /[+\-/*<>=(),]/;
+    const SYMBOLS = /[+\-/*<>=(),^]/;
     if (SYMBOLS.test(char)) {
       tokens.push(char);
       scanner++;
@@ -96,7 +96,7 @@ function parse(tokens) {
       continue;
     }
 
-    const OPERATORS = /[+\-/*<>=]/;
+    const OPERATORS = /[+\-/*<>=^]/;
     if (OPERATORS.test(token)) {
       while (shouldUnwindOperatorStack(operators, token)) {
         out.push(operators.pop());
@@ -143,7 +143,7 @@ function parse(tokens) {
 
 function evaluate(rpn) {
   function getNumOperands(operator) {
-    const ARITHMETIC_OPERATORS = /[+\-/*]/;
+    const ARITHMETIC_OPERATORS = /[+\-/*^]/;
     if (ARITHMETIC_OPERATORS.test(operator)) {
       return 2;
     }
@@ -158,7 +158,7 @@ function evaluate(rpn) {
     }
 
     let result;
-    const ARITHMETIC_OPERATORS = /[+\-/*]/;
+    const ARITHMETIC_OPERATORS = /[+\-/*^]/;
     if (ARITHMETIC_OPERATORS.test(operator)) {
       result = operateArithmetic(operands[0], operands[1], operator);
     } else {
@@ -178,6 +178,8 @@ function evaluate(rpn) {
         return b * a;
       case '/':
         return b / a;
+      case '^':
+        return Math.pow(b, a);
       default:
         throw new Error(`Invalid operator: ${operator}`);
     }
@@ -197,7 +199,7 @@ function evaluate(rpn) {
   for (let scanner = 0; scanner < rpn.length; scanner++) {
     const token = rpn[scanner];
 
-    const OPERATORS = /[+\-/*<>=]/;
+    const OPERATORS = /[+\-/*<>^]/;
     if (OPERATORS.test(token)) {
       stack.push(operate(token, stack));
       continue;

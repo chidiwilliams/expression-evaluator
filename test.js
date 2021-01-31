@@ -17,10 +17,10 @@ const testCases = [
     message: 'with decimals',
   },
   {
-    input: '24 + 5 * (6 - 3)',
-    tokens: [24, '+', 5, '*', '(', 6, '-', 3, ')'],
-    rpn: [24, 5, 6, 3, '-', '*', '+'],
-    output: 39,
+    input: '24 + 5 * (6 - 3 ^ 2 ^ 2)',
+    tokens: [24, '+', 5, '*', '(', 6, '-', 3, '^', 2, '^', 2, ')'],
+    rpn: [24, 5, 6, 3, 2, 2, '^', '^', '-', '*', '+'],
+    output: -351,
     message: 'with operators with different precedences',
   },
   {
