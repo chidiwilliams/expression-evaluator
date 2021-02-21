@@ -16,8 +16,9 @@ jobs:
         run: |
           yarn install --frozen-lockfile
           yarn run build
-      - uses: crazy-max/ghaction-github-pages@v1.2.5
+      - uses: crazy-max/ghaction-github-pages@v2
         with:
+          target_branch: gh-pages
           build_dir: dist
         env:
-          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
