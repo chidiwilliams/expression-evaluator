@@ -1,9 +1,9 @@
 {
   "name": "expression-evaluator",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "simple.js",
   "scripts": {
-    "test": "node test.js"
+    "test": "node simple.test.js"
   },
   "repository": {
     "type": "git",

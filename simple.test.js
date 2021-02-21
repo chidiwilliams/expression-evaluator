@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { evaluator, evaluate, tokenize, parse } = require('.');
+const { tokenize, toRPN, evalRPN, evaluate } = require('./simple');
 
 const testCases = [
   {
@@ -23,20 +23,13 @@ const testCases = [
     output: -351,
     message: 'with operators with different precedences',
   },
-  {
-    input: 'MAX(50, 10)',
-    tokens: ['MAX', '(', 50, ',', 10, ')'],
-    rpn: [50, 10, 'MAX'],
-    output: 50,
-    message: 'with MAX function',
-  },
 ];
 
 testCases.forEach((test) => {
   assertEqual(tokenize(test.input), test.tokens, `tokenize: ${test.message}`);
-  assertEqual(parse(test.tokens), test.rpn, `parse: ${test.message}`);
-  assertEqual(evaluate(test.rpn), test.output, `evaluate: ${test.message}`);
-  assertEqual(evaluator(test.input), test.output, `evaluator: ${test.message}`);
+  assertEqual(toRPN(test.tokens), test.rpn, `toRPN: ${test.message}`);
+  assertEqual(evalRPN(test.rpn), test.output, `evalRPN: ${test.message}`);
+  assertEqual(evaluate(test.input), test.output, `evaluator: ${test.message}`);
 });
 
 function assertEqual(actual, expected, message) {
