@@ -10,4 +10,4 @@ Supports:
 - Variables
 - Custom functions
 
-Blog: https://chidiwilliams.com/evaluator/
+Blog post: https://chidiwilliams.com/evaluator/
