@@ -2,8 +2,12 @@
   "name": "expression-evaluator",
   "version": "1.0.0",
   "main": "simple.js",
+  "homepage": "http://chidiwilliams.github.io/expression-evaluator",
   "scripts": {
-    "test": "node simple.test.js"
+    "test": "node simple.test.js",
+    "deploy": "yarn run build && gh-pages -d dist",
+    "dev": "parcel index.html",
+    "build": "parcel build index.html --public-url ."
   },
   "repository": {
     "type": "git",
@@ -14,5 +18,10 @@
   "bugs": {
     "url": "https://github.com/chidiwilliams/expression-evaluator/issues"
   },
-  "homepage": "https://github.com/chidiwilliams/expression-evaluator#readme"
+  "devDependencies": {
+    "gh-pages": "^2.2.0",
+    "parcel": "^1.12.4",
+    "parcel-plugin-ogimage": "^1.1.0",
+    "parcel-plugin-static-files-copy": "^2.3.1"
+  }
 }

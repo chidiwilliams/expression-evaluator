@@ -1,0 +1,23 @@
+name: CI
+
+on: [push]
+
+jobs:
+  gh-pages:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '10.x'
+      - run: npm install -g yarn
+      - name: yarn install and build
+        run: |
+          yarn install --frozen-lockfile
+          yarn run build
+      - uses: crazy-max/ghaction-github-pages@v1.2.5
+        with:
+          build_dir: dist
+        env:
+          GITHUB_PAT: ${{ secrets.GITHUB_PAT }}

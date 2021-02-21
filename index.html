@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <!-- <link rel="shortcut icon" type="image/ico" href="favicon.ico" /> -->
+
+    <meta
+      name="description"
+      itemprop="description"
+      content="A math expression evaluator written in JavaScript"
+    />
+    <meta itemprop="name" content="Expression Evaluator" />
+    <!-- <meta itemprop="image" content="thumbnail.png" /> -->
+
+    <!-- Facebook Open Graph -->
+    <meta property="og:title" content="Expression Evaluator" />
+    <meta
+      property="og:description"
+      content="A math expression evaluator written in JavaScript"
+    />
+    <meta
+      property="og:url"
+      content="https://chidiwilliams.github.io/expression-evaluator/"
+    />
+    <meta property="og:type" content="website" />
+    <!-- <meta property="og:image" content="thumbnail.png" /> -->
+    <meta property="og:site_name" content="Expression Evaluator" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+
+    <link
+      rel="canonical"
+      href="https://chidiwilliams.github.io/expression-evaluator/"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/blocks.css/dist/blocks.min.css"
+    />
+
+    <title>Expression Evaluator</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        font-family: system-ui, sans-serif;
+        color: #222;
+        background: #f8f8f8;
+      }
+
+      body {
+        font-size: 20px;
+      }
+
+      .container {
+        margin: 0 auto;
+        padding: 0 15px;
+        max-width: 600px;
+      }
+
+      h1 {
+        padding-bottom: 6px;
+        border-bottom: 3px solid #222;
+        margin-top: 60px;
+      }
+
+      .evaluator {
+        margin: 80px 0;
+      }
+
+      form {
+        margin: 0 0 20px;
+      }
+
+      .input-wrapper {
+        height: 50px;
+        width: calc(100% - 12px);
+      }
+
+      input {
+        border: 0;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        font-size: 20px;
+        font-family: 'Courier New', Courier, monospace;
+        padding: 0 10px;
+      }
+
+      .output {
+        height: 250px;
+        padding: 10px;
+        --block-background-color: #222;
+        color: #ffffff;
+        font-family: 'Courier New', Courier, monospace;
+      }
+
+      .output-val.error {
+        color: #f44;
+      }
+
+      .footer {
+        font-size: 14px;
+        text-align: right;
+      }
+
+      .footer a {
+        color: #999999;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Expression Evaluator</h1>
+
+      <div class="evaluator">
+        <form
+          action="javascript:void(0);"
+          class="input-wrapper wrapper block fixed"
+        >
+          <input
+            type="text"
+            placeholder="Enter expression..."
+            value="24 + 5 * (60 - 3 ^ 2)"
+            id="input"
+            autofocus
+          />
+        </form>
+
+        <div class="output card fixed block">
+          <div class="output-display">
+            > <span class="output-val" id="output">279</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <a
+          href="https://github.com/chidiwilliams/expression-evaluator"
+          target="blank"
+          >View source</a
+        >
+      </div>
+    </div>
+    <script src="./index.js"></script>
+  </body>
+</html>
