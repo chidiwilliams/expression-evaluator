@@ -1,4 +1,4 @@
-import simple from './simple';
+import * as simple from './simple';
 
 const inputElement = document.querySelector('#input');
 const outputElement = document.querySelector('#output');
