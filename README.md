@@ -9,3 +9,5 @@ Supports:
 - Comparison operators: `<`, `>`, `==`
 - Variables
 - Custom functions
+
+Blog: https://chidiwilliams.com/evaluator/
