@@ -38,8 +38,8 @@ function toRPN(tokens) {
   const operators = [];
   const out = [];
 
-  for (let scanner = 0; scanner < tokens.length; scanner++) {
-    const token = tokens[scanner];
+  for (let i = 0; i < tokens.length; i++) {
+    const token = tokens[i];
 
     if (typeof token === 'number') {
       out.push(token);
@@ -67,7 +67,7 @@ function toRPN(tokens) {
       continue;
     }
 
-    throw new Error(`Unparsed token ${token} at position ${scanner}`);
+    throw new Error(`Unparsed token ${token} at position ${i}`);
   }
 
   for (let i = operators.length - 1; i >= 0; i--) {
@@ -91,8 +91,8 @@ function shouldUnwindOperatorStack(operators, nextToken) {
 function evalRPN(rpn) {
   const stack = [];
 
-  for (let scanner = 0; scanner < rpn.length; scanner++) {
-    const token = rpn[scanner];
+  for (let i = 0; i < rpn.length; i++) {
+    const token = rpn[i];
 
     if (/[+\-/*^]/.test(token)) {
       stack.push(operate(token, stack));
