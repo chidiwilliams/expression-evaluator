@@ -17,6 +17,13 @@ const testCases = [
     message: 'with decimals',
   },
   {
+    input: '1 * 3 )',
+    tokens: [1, '*', 3, ')'],
+    rpn: [1, 3, '*'],
+    output: 3,
+    message: 'with unbalanced parantheses',
+  },
+  {
     input: '24 + 5 * (6 - 3 ^ 2 ^ 2)',
     tokens: [24, '+', 5, '*', '(', 6, '-', 3, '^', 2, '^', 2, ')'],
     rpn: [24, 5, 6, 3, 2, 2, '^', '^', '-', '*', '+'],

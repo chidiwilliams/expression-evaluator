@@ -60,7 +60,7 @@ function toRPN(tokens) {
     }
 
     if (token === ')') {
-      while (operators[operators.length - 1] !== '(') {
+      while (operators.length > 0 && operators[operators.length - 1] !== '(') {
         out.push(operators.pop());
       }
       operators.pop();
