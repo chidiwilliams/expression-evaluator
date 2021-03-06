@@ -18,6 +18,13 @@ const testCases = [
     output: 61,
     message: 'with SQRT function',
   },
+  {
+    input: '54 + SQRT(49) * 8',
+    tokens: [54, '+', 'SQRT', '(', 49, ')', '*', 8],
+    rpn: [54, 49, 'SQRT', 8, '*', '+'],
+    output: 110,
+    message: 'with function and operators with different precedences',
+  },
 ];
 
 testCases.forEach((test) => {
