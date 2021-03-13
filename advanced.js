@@ -17,7 +17,7 @@ function tokenize(input) {
       continue;
     }
 
-    if (/[+\-/*(),^]/.test(char)) {
+    if (/[+\-/*(),^<>=]/.test(char)) {
       tokens.push(char);
       scanner++;
       continue;
@@ -120,7 +120,7 @@ function evalRPN(rpn) {
   for (let i = 0; i < rpn.length; i++) {
     const token = rpn[i];
 
-    if (/[+\-/*^]/.test(token)) {
+    if (/[+\-/*^<>=]/.test(token)) {
       stack.push(operate(token, stack));
       continue;
     }
@@ -152,6 +152,12 @@ function operate(operator, stack) {
       return b / a;
     case '^':
       return Math.pow(b, a);
+    case '<':
+      return b < a;
+    case '>':
+      return b < a;
+    case '=':
+      return b === a;
     default:
       throw new Error(`Invalid operator: ${operator}`);
   }
@@ -163,6 +169,12 @@ function apply(func, stack) {
   }
   if (func === 'SQRT') {
     return Math.sqrt(stack.pop());
+  }
+  if (func === 'IF') {
+    const ifFalse = stack.pop();
+    const ifTrue = stack.pop();
+    const predicate = stack.pop();
+    return predicate ? ifTrue : ifFalse;
   }
   throw new Error(`Undefined function: ${func}`);
 }

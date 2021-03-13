@@ -25,6 +25,13 @@ const testCases = [
     output: 110,
     message: 'with function and operators with different precedences',
   },
+  {
+    input: 'IF(54 < 3, 6, 9) + 20',
+    tokens: ['IF', '(', 54, '<', 3, ',', 6, ',', 9, ')', '+', 20],
+    rpn: [54, 3, '<', 6, 9, 'IF', 20, '+'],
+    output: 29,
+    message: 'with function and operators with different precedences',
+  },
 ];
 
 testCases.forEach((test) => {
