@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { evalRPN, evaluate, toRPN, tokenize } = require('./advanced');
+const { evalRPN, evaluate, toRPN, tokenize } = require('./evaluator');
 const { testCases: simpleTestCases } = require('./simple.test');
 
 const testCases = [

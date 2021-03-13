@@ -1,10 +1,10 @@
 {
   "name": "expression-evaluator",
   "version": "1.0.0",
-  "main": "advanced.js",
+  "main": "evaluator.js",
   "homepage": "http://chidiwilliams.github.io/expression-evaluator",
   "scripts": {
-    "test": "node simple.test.js && node advanced.test.js",
+    "test": "node simple.test.js && node evaluator.test.js",
     "deploy": "yarn run build && gh-pages -d dist",
     "dev": "parcel index.html",
     "build": "parcel build index.html --public-url ."
