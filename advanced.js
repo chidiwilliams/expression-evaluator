@@ -1,3 +1,6 @@
+const defaultEnvironment = { $PI: Math.PI, $E: Math.E };
+let environment = { ...defaultEnvironment };
+
 function tokenize(input) {
   let scanner = 0;
   const tokens = [];
@@ -28,10 +31,10 @@ function tokenize(input) {
       continue;
     }
 
-    if (/[A-Z]/.test(char)) {
+    if (/[A-Z$]/.test(char)) {
       let name = '';
 
-      while (scanner < input.length && /[A-Z]/.test(input[scanner])) {
+      while (scanner < input.length && /[A-Z$]/.test(input[scanner])) {
         name += input[scanner++];
       }
 
@@ -85,7 +88,7 @@ function toRPN(tokens) {
       continue;
     }
 
-    if (/[A-Z]/.test(token)) {
+    if (/[A-Z$]/.test(token)) {
       operators.push(token);
       continue;
     }
@@ -119,9 +122,13 @@ function evalRPN(rpn) {
 
   for (let i = 0; i < rpn.length; i++) {
     const token = rpn[i];
-
     if (/[+\-/*^<>=]/.test(token)) {
       stack.push(operate(token, stack));
+      continue;
+    }
+
+    if (/\$/.test(token)) {
+      stack.push(environment[token] || token);
       continue;
     }
 
@@ -176,6 +183,12 @@ function apply(func, stack) {
     const predicate = stack.pop();
     return predicate ? ifTrue : ifFalse;
   }
+  if (func === 'SET') {
+    const value = stack.pop();
+    const key = stack.pop();
+    environment[key] = value;
+    return value;
+  }
   throw new Error(`Undefined function: ${func}`);
 }
 
@@ -183,9 +196,14 @@ function evaluate(input) {
   return evalRPN(toRPN(tokenize(input)));
 }
 
+function reset() {
+  environment = { ...defaultEnvironment };
+}
+
 module.exports = {
   tokenize,
   toRPN,
   evalRPN,
   evaluate,
+  reset,
 };
