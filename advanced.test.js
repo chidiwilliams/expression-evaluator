@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { evalRPN, evaluate, toRPN, tokenize, reset } = require('./advanced');
+const { evalRPN, evaluate, toRPN, tokenize } = require('./advanced');
 const { testCases: simpleTestCases } = require('./simple.test');
 
 const testCases = [
@@ -39,12 +39,20 @@ const testCases = [
     output: 247.7625088084629,
     message: 'with predefined variable',
   },
+  // Next two tests must be run in order
   {
     input: 'SET($FR, 45 + 90 * 78)',
     tokens: ['SET', '(', '$FR', ',', 45, '+', 90, '*', 78, ')'],
     rpn: ['$FR', 45, 90, 78, '*', '+', 'SET'],
     output: 7065,
     message: 'with function to update environment',
+  },
+  {
+    input: '$FR + 98',
+    tokens: ['$FR', '+', 98],
+    rpn: ['$FR', 98, '+'],
+    output: 7163,
+    message: 'with accessed user-defined variable',
   },
 ];
 
@@ -53,23 +61,6 @@ testCases.forEach((test) => {
   assertEqual(toRPN(test.tokens), test.rpn, `toRPN: ${test.message}`);
   assertEqual(evalRPN(test.rpn), test.output, `evalRPN: ${test.message}`);
   assertEqual(evaluate(test.input), test.output, `evaluator: ${test.message}`);
-});
-
-const environmentTests = [
-  {
-    steps: [
-      { input: 'SET($FR, 45 + 90 * 78)', output: 7065 },
-      { input: '$FR + 98', output: 7163 },
-    ],
-    message: 'with user-defined variable',
-  },
-];
-
-environmentTests.forEach((test) => {
-  test.steps.forEach((step) => {
-    assertEqual(evaluate(step.input), step.output, test.message);
-  });
-  reset();
 });
 
 function assertEqual(actual, expected, message) {
