@@ -1,4 +1,7 @@
-const defaultEnvironment = { $PI: Math.PI, $E: Math.E };
+// We'll set the default environment to contain a few handy math constants
+const defaultEnvironment = { PI: Math.PI, E: Math.E };
+
+// And then we'll initialize the current environment to the default...
 let environment = { ...defaultEnvironment };
 
 function tokenize(input) {
@@ -31,10 +34,10 @@ function tokenize(input) {
       continue;
     }
 
-    if (/[A-Z$]/.test(char)) {
+    if (/[A-Z$#]/.test(char)) {
       let name = '';
 
-      while (scanner < input.length && /[A-Z$]/.test(input[scanner])) {
+      while (scanner < input.length && /[A-Z$#]/.test(input[scanner])) {
         name += input[scanner++];
       }
 
@@ -103,6 +106,8 @@ function toRPN(tokens) {
   return out;
 }
 
+// Multiplication and division have higher precedence than addition and
+// subtraction, à la BODMAS/PEMDAS.
 const precedence = { '*': 2, '/': 2, '+': 1, '-': 1 };
 
 function shouldUnwindOperatorStack(operators, nextToken) {
@@ -117,33 +122,50 @@ function shouldUnwindOperatorStack(operators, nextToken) {
   );
 }
 
+/**
+ * Evaluates the RPN expression
+ */
 function evalRPN(rpn) {
   const stack = [];
 
+  // For each token in the RPN expression...
   for (let i = 0; i < rpn.length; i++) {
     const token = rpn[i];
+
+    // If the token is an operator...
     if (/[+\-/*^<>=]/.test(token)) {
+      // Operate on the stack and push the result back on to the stack
       stack.push(operate(token, stack));
       continue;
     }
 
+    // If the token is a variable...
     if (/\$/.test(token)) {
-      stack.push(environment[token] || token);
+      // Dereference the variable: get its value from the environment and push it to the stack.
+      // (Remove the "$" character first)
+      stack.push(environment[token.slice(1)]);
       continue;
     }
 
-    if (/[A-Z]/.test(token)) {
+    // If the token is a function name...
+    if (/^[A-Z]/.test(token)) {
+      // Apply the function on the stack and push the result to the stack
       stack.push(apply(token, stack));
       continue;
     }
 
-    // token is a number
+    // If the token is a number or a variable pointer, push it to the stack
     stack.push(token);
   }
 
+  // The value left on the stack is the final result of the evaluation
   return stack.pop();
 }
 
+/**
+ * Operates on the stack. The operator here is either an arithmetic or a
+ * logical operator, so we only need two operands from the stack to operate on.
+ */
 function operate(operator, stack) {
   const a = stack.pop();
   const b = stack.pop();
@@ -170,32 +192,62 @@ function operate(operator, stack) {
   }
 }
 
+/**
+ * Applies the function onto the stack.
+ *
+ * Functions may have any number of arguments. But each function must have a
+ * definite number of arguments. i.e. X(a, b) and Y(a, b, c) are possible, but
+ * X(a, b) and X(a, b, c) are not possible.
+ *
+ * The function arguments are in right-to-left order in the stack. The rightmost
+ * argument is at the top of the stack, and so on.
+ */
 function apply(func, stack) {
+  // MAX(a, b) returns the larger of a and b
   if (func === 'MAX') {
-    return Math.max(stack.pop(), stack.pop());
+    const a = stack.pop();
+    const b = stack.pop();
+    return Math.max(a, b);
   }
+
+  // SQRT(a) returns the square-root of a
   if (func === 'SQRT') {
-    return Math.sqrt(stack.pop());
+    const a = stack.pop();
+    return Math.sqrt(a);
   }
+
+  // IF(a, b, c) returns b if a is true. Else, it returns c
   if (func === 'IF') {
     const ifFalse = stack.pop();
     const ifTrue = stack.pop();
     const predicate = stack.pop();
     return predicate ? ifTrue : ifFalse;
   }
+
+  // SET(#a, b) sets the variable "a" to the value "b"
   if (func === 'SET') {
     const value = stack.pop();
     const key = stack.pop();
-    environment[key] = value;
+    environment[key.slice(1)] = value;
     return value;
   }
+
+  // If we can't recognize the function, we'll throw an error
   throw new Error(`Undefined function: ${func}`);
 }
 
+/**
+ * Finally, in the `evaluator` function, we'll link all stages
+ * of the evaluation together.
+ * tokenize -> toRPN -> evalRPN
+ */
 function evaluate(input) {
   return evalRPN(toRPN(tokenize(input)));
 }
 
+/**
+ * Resets the environment back to the default
+ */
 function reset() {
   environment = { ...defaultEnvironment };
 }

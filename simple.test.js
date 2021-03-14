@@ -46,5 +46,3 @@ function assertEqual(actual, expected, message) {
     `${message}: expected: ${expected}, got: ${actual}`,
   );
 }
-
-module.exports = { testCases };

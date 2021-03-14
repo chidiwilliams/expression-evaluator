@@ -1,9 +1,9 @@
 const assert = require('assert');
 const { evalRPN, evaluate, toRPN, tokenize } = require('./evaluator');
-const { testCases: simpleTestCases } = require('./simple.test');
+require('./simple.test');
+require('./environment.test');
 
 const testCases = [
-  ...simpleTestCases,
   {
     input: 'MAX(50, 10)',
     tokens: ['MAX', '(', 50, ',', 10, ')'],
@@ -38,21 +38,6 @@ const testCases = [
     rpn: ['$PI', 78, '*', '$E', '+'],
     output: 247.7625088084629,
     message: 'with predefined variable',
-  },
-  // Next two tests must be run in order
-  {
-    input: 'SET($FR, 45 + 90 * 78)',
-    tokens: ['SET', '(', '$FR', ',', 45, '+', 90, '*', 78, ')'],
-    rpn: ['$FR', 45, 90, 78, '*', '+', 'SET'],
-    output: 7065,
-    message: 'with function to update environment',
-  },
-  {
-    input: '$FR + 98',
-    tokens: ['$FR', '+', 98],
-    rpn: ['$FR', 98, '+'],
-    output: 7163,
-    message: 'with accessed user-defined variable',
   },
 ];
 
