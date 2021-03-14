@@ -1,53 +1,81 @@
 // We'll set the default environment to contain a few handy math constants
 const defaultEnvironment = { PI: Math.PI, E: Math.E };
 
-// And then we'll initialize the current environment to the default...
+// And then we'll initialize the current environment to the default
 let environment = { ...defaultEnvironment };
 
+/**
+ * Returns an array of tokens from the input expression string.
+ */
 function tokenize(input) {
+  // First, we'll initialize a `scanner` index to track how much
+  // of the input string we've covered
   let scanner = 0;
+
+  // We'll also need an array to put the tokens we find
   const tokens = [];
 
+  // While we haven't reached the end of the input...
   while (scanner < input.length) {
+    // Get the next character
     const char = input[scanner];
 
+    // If the character is a number...
     if (/[0-9]/.test(char)) {
+      // Create a string to hold all the digits in the number
       let digits = '';
 
+      // While we have more digits (or a period) in the number and we haven't
+      // gotten to the end of the input...
       while (scanner < input.length && /[0-9\.]/.test(input[scanner])) {
+        // Collect all the digits
         digits += input[scanner++];
       }
 
+      // Convert the digits to a number and push the number to the array of tokens
       const number = parseFloat(digits);
       tokens.push(number);
       continue;
     }
 
+    // If the character is a symbol...
     if (/[+\-/*(),^<>=]/.test(char)) {
+      // Push it to the array of tokens
       tokens.push(char);
       scanner++;
       continue;
     }
 
+    // If the character is white space...
     if (char === ' ') {
+      // Ignore it
       scanner++;
       continue;
     }
 
+    // If the character is the first character of a name,
+    // like the name of a function or variable or variable pointer
     if (/[A-Z$#]/.test(char)) {
+      // Create a string to hold all the characters in the name
       let name = '';
 
+      // While we have more characters that make up the name and we haven't
+      // gotten to the end of the input...
       while (scanner < input.length && /[A-Z$#]/.test(input[scanner])) {
+        // Collect all the characters in the name
         name += input[scanner++];
       }
 
+      // Then push the full name to the array of tokens
       tokens.push(name);
       continue;
     }
 
+    // If we can't recognize the character, we'll throw an error
     throw new Error(`Invalid token ${char} at position ${scanner}`);
   }
 
+  // After collecting all the tokens in the expression, we'll return them
   return tokens;
 }
 /**
