@@ -77,7 +77,7 @@ function toRPN(tokens) {
   return out;
 }
 
-const precedence = { '*': 2, '/': 2, '+': 1, '-': 1 };
+const precedence = { '^': 3, '*': 2, '/': 2, '+': 1, '-': 1 };
 
 function shouldUnwindOperatorStack(operators, nextToken) {
   if (operators.length === 0) {

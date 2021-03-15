@@ -1,5 +1,26 @@
+/**
+ * ####### #     # ######  ######  #######  #####   #####  ### ####### #     #
+ * #        #   #  #     # #     # #       #     # #     #  #  #     # ##    #
+ * #         # #   #     # #     # #       #       #        #  #     # # #   #
+ * #####      #    ######  ######  #####    #####   #####   #  #     # #  #  #
+ * #         # #   #       #   #   #             #       #  #  #     # #   # #
+ * #        #   #  #       #    #  #       #     # #     #  #  #     # #    ##
+ * ####### #     # #       #     # #######  #####   #####  ### ####### #     #
+ *
+ * ####### #     #    #    #       #     #    #    ####### ####### ######
+ * #       #     #   # #   #       #     #   # #      #    #     # #     #
+ * #       #     #  #   #  #       #     #  #   #     #    #     # #     #
+ * #####   #     # #     # #       #     # #     #    #    #     # ######
+ * #        #   #  ####### #       #     # #######    #    #     # #   #
+ * #         # #   #     # #       #     # #     #    #    #     # #    #
+ * #######    #    #     # #######  #####  #     #    #    ####### #     #
+ */
+
 // We'll set the default environment to contain a few handy math constants
-const defaultEnvironment = { PI: Math.PI, E: Math.E };
+const defaultEnvironment = {
+  PI: Math.PI,
+  E: Math.E,
+};
 
 // And then we'll initialize the current environment to the default
 let environment = { ...defaultEnvironment };
@@ -78,6 +99,7 @@ function tokenize(input) {
   // After collecting all the tokens in the expression, we'll return them
   return tokens;
 }
+
 /**
  * Converts the tokens in infix notation to Reverse Polish notation
  */
@@ -151,10 +173,10 @@ function toRPN(tokens) {
     }
 
     // If we can't recognize the token, we'll throw an error
-    throw new Error(`Unparsed token ${token} at position ${i}`);
+    throw new Error(`Invalid token ${token}`);
   }
 
-  // Finally we'll unwind all the remainin operators on to `out`
+  // Finally we'll unwind all the remaining operators on to `out`
   for (let i = operators.length - 1; i >= 0; i--) {
     out.push(operators[i]);
   }
@@ -163,12 +185,18 @@ function toRPN(tokens) {
   return out;
 }
 
-// Multiplication and division have higher precedence than addition and
-// subtraction. We know this from BODMAS, PEMDAS, etc.
-const precedence = { '*': 2, '/': 2, '+': 1, '-': 1 };
+// BODMAS, PEMDAS
+// Exponentiation > [multiplication, division] > [addition, subtraction]
+const precedence = {
+  '^': 3,
+  '*': 2,
+  '/': 2,
+  '+': 1,
+  '-': 1,
+};
 
-// Returns true if the topmost operator in the `operators` stack should be
-// has a higher pre
+// Returns true if the topmost operator in the `operators` stack has a
+// precedence higher than or equal to the precedence of `nextToken`
 function shouldUnwindOperatorStack(operators, nextToken) {
   if (operators.length === 0) {
     return false;
@@ -199,10 +227,17 @@ function evalRPN(rpn) {
     }
 
     // If the token is a variable...
-    if (/\$/.test(token)) {
-      // Dereference the variable: get its value from the environment and push it to the stack.
-      // (Remove the "$" character first)
-      stack.push(environment[token.slice(1)]);
+    if (/^\$/.test(token)) {
+      // We'll try to get its value from the environment (remember to skip the '$' character)
+      const value = environment[token.slice(1)];
+
+      // If the variable has not been set in the environment, we'll throw an error
+      if (value === undefined) {
+        throw new Error(`${token} is undefined`);
+      }
+
+      // But if it has, we'll push the value to the stack
+      stack.push(value);
       continue;
     }
 
@@ -214,7 +249,13 @@ function evalRPN(rpn) {
     }
 
     // If the token is a number or a variable pointer, push it to the stack
-    stack.push(token);
+    if (typeof token === 'number' || /^\#/.test(token)) {
+      stack.push(token);
+      continue;
+    }
+
+    // If we can't recognize the token, we'll throw an error
+    throw new Error(`Invalid token ${token}`);
   }
 
   // The value left on the stack is the final result of the evaluation
@@ -284,7 +325,7 @@ function apply(func, stack) {
     return predicate ? ifTrue : ifFalse;
   }
 
-  // SET(#a, b) sets the variable "a" to the value "b"
+  // SET(#a, b) sets the variable "a" to the value "b" TODO: quotes
   if (func === 'SET') {
     const value = stack.pop();
     const key = stack.pop();
