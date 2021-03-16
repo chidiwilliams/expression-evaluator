@@ -353,4 +353,5 @@ module.exports = {
   evalRPN,
   evaluate,
   reset,
+  environment,
 };
