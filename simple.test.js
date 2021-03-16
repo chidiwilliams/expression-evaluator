@@ -26,7 +26,7 @@ const testCases = [
   {
     input: '24 + 5 * (6 - 3 ^ 2 ^ 2)',
     tokens: [24, '+', 5, '*', '(', 6, '-', 3, '^', 2, '^', 2, ')'],
-    rpn: [24, 5, 6, 3, 2, 2, '^', '^', '-', '*', '+'],
+    rpn: [24, 5, 6, 3, 2, '^', 2, '^', '-', '*', '+'],
     output: -351,
     message: 'with operators with different precedences',
   },
