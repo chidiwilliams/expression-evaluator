@@ -122,8 +122,8 @@ function toRPN(tokens) {
       continue;
     }
 
-    // If the token is an operator...
-    if (/[+\-/*<>=^]/.test(token)) {
+    // If the token is an operator or a function name...
+    if (/[+\-/*<>=^A-Z]/.test(token)) {
       // While there are operators in the `operators` stack with a higher
       // precedence than the current token, we'll unwind them `operators` on to `out`
       while (shouldUnwindOperatorStack(operators, token)) {
@@ -162,13 +162,6 @@ function toRPN(tokens) {
       while (operators.length > 0 && operators[operators.length - 1] !== '(') {
         out.push(operators.pop());
       }
-      continue;
-    }
-
-    // If the token is a function name...
-    if (/[A-Z]/.test(token)) {
-      // We'll push it to the `operators` stack
-      operators.push(token);
       continue;
     }
 
@@ -268,26 +261,26 @@ function evalRPN(rpn) {
  * only need two operands from the stack for any operator.
  */
 function operate(operator, stack) {
-  const a = stack.pop();
   const b = stack.pop();
+  const a = stack.pop();
 
   switch (operator) {
     case '+':
-      return b + a;
+      return a + b;
     case '-':
-      return b - a;
+      return a - b;
     case '*':
-      return b * a;
+      return a * b;
     case '/':
-      return b / a;
+      return a / b;
     case '^':
-      return Math.pow(b, a);
+      return Math.pow(a, b);
     case '<':
-      return b < a;
+      return a < b;
     case '>':
-      return b < a;
+      return a < b;
     case '=':
-      return b === a;
+      return a === b;
     default:
       throw new Error(`Invalid operator: ${operator}`);
   }
@@ -325,7 +318,7 @@ function apply(func, stack) {
     return predicate ? ifTrue : ifFalse;
   }
 
-  // SET(#a, b) sets the variable "a" to the value "b" TODO: quotes
+  // SET(#a, b) sets the variable a to the value b
   if (func === 'SET') {
     const value = stack.pop();
     const key = stack.pop();
