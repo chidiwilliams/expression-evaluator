@@ -109,6 +109,12 @@
         color: #999999;
         margin-bottom: 10px;
       }
+
+      .help code {
+        white-space: nowrap;
+        padding: 0 5px;
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
@@ -119,21 +125,24 @@
         <ul>
           <li>
             <b>Valid operators:</b>
-            <code>+</code>
-            <code>-</code>
-            <code>*</code>
-            <code>/</code>
+            <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>,
             <code>^</code>
           </li>
           <li>
             <b>Functions:</b>
-            <code>MAX(a, b)</code>, <code>SQRT(a)</code>,
-            <code>SET(#X, a)</code>
+            <code title="Returns the larger value of a and b">MAX(a, b)</code>,
+            <code title="Returns the square root of a ">SQRT(a)</code>,
+            <code title="Returns b if a is true, else returns c"
+              >IF(a, b, c)</code
+            >,
+            <code title="Sets the value of a to variable X and returns a"
+              >SET(#X, a)</code
+            >
           </li>
           <li>
             <b>Default variables:</b>
-            <code>$PI</code>,
-            <code>$E</code>
+            <code title="Pi">$PI</code>,
+            <code title="Euler's number">$E</code>
           </li>
         </ul>
       </div>
