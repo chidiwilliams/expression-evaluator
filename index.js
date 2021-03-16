@@ -1,13 +1,17 @@
-import * as simple from './simple';
 import confetti from 'canvas-confetti';
+import * as evaluator from './evaluator';
 
 const inputElement = document.querySelector('#input');
 const outputElement = document.querySelector('#output');
+const envElement = document.querySelector('#env');
 
 inputElement.addEventListener('input', (event) => {
+  runEvaluator(event.target.value);
+});
+
+function runEvaluator(expression) {
   try {
-    const expression = event.target.value;
-    const result = simple.evaluate(expression);
+    const result = evaluator.evaluate(expression);
     outputElement.innerText = result ?? '';
     outputElement.classList.remove('error');
 
@@ -18,7 +22,13 @@ inputElement.addEventListener('input', (event) => {
     outputElement.innerText = error;
     outputElement.classList.add('error');
   }
-});
+
+  const envStr = Object.entries(evaluator.environment)
+    .map(([k, v]) => `${k}=${v}`)
+    .join(', ');
+
+  envElement.innerText = envStr;
+}
 
 // https://www.kirilv.com/canvas-confetti/#fireworks
 function runConfetti() {
@@ -52,3 +62,5 @@ function runConfetti() {
     );
   }, 250);
 }
+
+runEvaluator(inputElement.value);

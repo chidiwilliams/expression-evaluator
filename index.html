@@ -66,7 +66,7 @@
       }
 
       .evaluator {
-        margin: 80px 0 15px;
+        margin: 20px 0;
       }
 
       .input-wrapper {
@@ -104,11 +104,39 @@
       .footer a {
         color: #999999;
       }
+
+      .env-wrapper {
+        color: #999999;
+        margin-bottom: 10px;
+      }
     </style>
   </head>
   <body>
     <div class="container">
       <h1>Expression Evaluator</h1>
+
+      <div class="help">
+        <ul>
+          <li>
+            <b>Valid operators:</b>
+            <code>+</code>
+            <code>-</code>
+            <code>*</code>
+            <code>/</code>
+            <code>^</code>
+          </li>
+          <li>
+            <b>Functions:</b>
+            <code>MAX(a, b)</code>, <code>SQRT(a)</code>,
+            <code>SET(#X, a)</code>
+          </li>
+          <li>
+            <b>Default variables:</b>
+            <code>$PI</code>,
+            <code>$E</code>
+          </li>
+        </ul>
+      </div>
 
       <div class="evaluator">
         <form
@@ -118,15 +146,16 @@
           <input
             type="text"
             placeholder="Enter expression..."
-            value="24 + 5 * (60 - 3 ^ 2)"
+            value="24 + $PI/2 * (2^SQRT($E) - 1)"
             id="input"
             autofocus
           />
         </form>
 
         <div class="output card fixed block">
+          <div class="env-wrapper">ENV> <span id="env"></span></div>
           <div class="output-display">
-            > <span class="output-val" id="output">279</span>
+            > <span class="output-val" id="output"></span>
           </div>
         </div>
       </div>
