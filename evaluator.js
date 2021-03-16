@@ -278,7 +278,7 @@ function operate(operator, stack) {
     case '<':
       return a < b;
     case '>':
-      return a < b;
+      return a > b;
     case '=':
       return a === b;
     default:
