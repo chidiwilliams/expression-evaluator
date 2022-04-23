@@ -196,10 +196,7 @@ function shouldUnwindOperatorStack(operators, nextToken) {
   }
 
   const lastOperator = operators[operators.length - 1];
-  return (
-    /[A-Z]/.test(lastOperator) ||
-    precedence[lastOperator] >= precedence[nextToken]
-  );
+  return /[A-Z]/.test(lastOperator) || (precedence[lastOperator] && precedence[lastOperator] >= precedence[nextToken]);
 }
 
 /**
